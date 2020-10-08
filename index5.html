@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title> firbase storage</title>
+        <style>
+            #myPanoViewer {
+                position: relative;
+                width: 1600px;
+                height: 1400px;
+            }
+            </style>
+    </head>
+    <body>
+    <div id="myPanoViewer"></div>
+    <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-storage.js"></script>
+    <script src="//naver.github.io/egjs-view360/release/latest/dist/PanoViewer/view360.panoviewer.pkgd.min.js"></script>
+   <script>
+      var firebaseConfig = {
+           apiKey: "AIzaSyD87368J1bqEUZdHFVMuHBnXtP4BwW8gq8",
+           authDomain: "fir-c136a.firebaseapp.com",
+           databaseURL: "https://fir-c136a.firebaseio.com",
+           projectId: "fir-c136a",
+           storageBucket: "fir-c136a.appspot.com",
+           messagingSenderId: "1055935545446",
+           appId: "1:1055935545446:web:f65ebd547d70ac15352da7",
+           measurementId: "G-JCDY3RHQ0E",
+           header: {"origin": ["*"]},
+        };
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+        var storage = firebase.storage();
+        var storageRef = storage.ref();
+        var i = 0;
+        var test;
+        storageRef.child('images/').listAll().then(function(result) {
+             result.items.forEach(function(imageRef) {
+
+                //  console.log("image ref" + imageRef.toString());
+                 i++;
+                 displayImage(i,imageRef);
+             })
+        });
+     function displayImage(row,images) {
+         images.getDownloadURL().then(function(url) {
+             console.log(url);
+
+             test = url;
+             localStorage.setItem('imagepath', url);
+            //  document.querySelector('img').src = test;
+            
+
+         })
+     }
+
+     var PanoViewer = eg.view360.PanoViewer;
+     var container = document.getElementById("myPanoViewer");
+    var panoViewer = new PanoViewer(container, {
+         image: localStorage.getItem('imagepath'),
+         projectionType: "panorama"
+
+     });
+    </script>
+    </body>
+</html>
